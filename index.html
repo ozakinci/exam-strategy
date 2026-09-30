@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toets- en examenstrategie</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    color: #1c2430;
+    background: #eef1f5;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+  .card {
+    max-width: 640px;
+    width: 100%;
+    background: #fff;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 8px 36px rgba(15, 30, 60, .14);
+  }
+  h1 { margin: 0 0 6px; font-size: 26px; color: #12305e; }
+  .lead { margin: 0 0 22px; color: #5b6572; font-size: 14px; line-height: 1.5; }
+  .links { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  a.print {
+    display: block;
+    text-decoration: none;
+    color: #12305e;
+    border: 1.5px solid #c7d2e2;
+    border-radius: 11px;
+    padding: 18px;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+  }
+  a.print:hover { border-color: #3b7dd8; box-shadow: 0 6px 18px rgba(59, 125, 216, .18); transform: translateY(-1px); }
+  a.print .t { font-weight: 700; font-size: 17px; }
+  a.print .d { margin-top: 5px; font-size: 12.5px; color: #5b6572; line-height: 1.45; }
+  .foot { margin-top: 22px; font-size: 12px; color: #5b6572; }
+  .rule { height: 4px; border-radius: 3px; margin: 18px 0 22px;
+          background: linear-gradient(90deg, #12305e, #3b7dd8 45%, #2f9e5f 72%, #c0392b); }
+  @media (max-width: 520px) { .links { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Toets- en examenstrategie</h1>
+    <p class="lead">Zes stappen die je elke toets en elk examen helpen omzetten in een goed resultaat.
+      Kies een versie, open hem en print op A4 - 1 pagina.</p>
+    <div class="rule"></div>
+    <div class="links">
+      <a class="print" href="2d.html">
+        <div class="t">2D-versie</div>
+        <div class="d">Het platte stappenplan - rustig, recht toe recht aan, printvriendelijk.</div>
+      </a>
+      <a class="print" href="3d.html">
+        <div class="t">3D-versie</div>
+        <div class="d">Hetzelfde stappenplan in 3D - met diepte en een route naar beneden.</div>
+      </a>
+    </div>
+    <p class="foot">Tip: in de printdialoog "Achtergrondafbeeldingen" aanzetten, dan blijven de kleuren staan.</p>
+  </div>
+</body>
+</html>

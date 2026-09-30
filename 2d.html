@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toets- en examenstrategie - 2D</title>
+<style>
+  :root {
+    --ink: #1c2430;
+    --muted: #5b6572;
+    --line: #dde2ea;
+    --paper: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: #eef1f5;
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sheet {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 18px auto;
+    padding: 11mm 12mm 9mm;
+    background: var(--paper);
+    box-shadow: 0 6px 30px rgba(15, 30, 60, .14);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .hdr { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .hdr h1 { margin: 0; font-size: 24px; letter-spacing: .01em; color: #12305e; }
+  .hdr p { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); max-width: 150mm; }
+  .badge {
+    flex: none;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    color: #12305e;
+    border: 1.5px solid #12305e;
+    border-radius: 999px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
+  .rule { height: 3px; border-radius: 3px; margin: 9px 0 11px;
+          background: linear-gradient(90deg, #12305e, #3b7dd8 45%, #2f9e5f 72%, #c0392b); }
+
+  /* Phases */
+  main { display: flex; flex-direction: column; gap: 7px; }
+  .phase {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    overflow: hidden;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .phase-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 12px;
+    background: var(--c);
+    color: #fff;
+  }
+  .num {
+    flex: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(255, 255, 255, .22);
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 12px;
+  }
+  .phase-head h2 { margin: 0; font-size: 15px; letter-spacing: .09em; }
+  .phase-head .ico { margin-left: auto; width: 22px; height: 22px; opacity: .95; }
+  .ico svg { width: 100%; height: 100%; display: block; }
+  .phase-body { padding: 8px 12px 9px; background: #fff; }
+  .phase-text { margin: 0; font-size: 12.5px; }
+  .phase-text + .items, .phase-text + .chips { margin-top: 7px; }
+
+  .items { display: flex; flex-direction: column; gap: 4px; }
+  .item { display: flex; gap: 8px; font-size: 11.5px; line-height: 1.35; }
+  .item .dot { flex: none; width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; background: var(--c); }
+  .item b { color: var(--c); font-weight: 700; }
+
+  .chips { display: flex; gap: 8px; }
+  .chip {
+    flex: 1 1 0; min-width: 0;
+    border: 1.5px solid var(--cc);
+    border-radius: 8px;
+    padding: 6px 9px;
+  }
+  .chip-title { font-weight: 700; color: var(--cc); font-size: 10.5px; letter-spacing: .03em; }
+  .chip-text { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* Footer */
+  .motto {
+    margin-top: auto;
+    padding-top: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    color: #12305e; font-weight: 800; font-size: 16px; letter-spacing: .06em;
+  }
+  .motto .star { color: #e0a52a; font-size: 18px; }
+
+  @media (max-width: 760px) {
+    .sheet { width: auto; min-height: 0; margin: 0; padding: 16px; }
+    .chips { flex-direction: column; }
+  }
+
+  @page { size: A4 portrait; margin: 10mm; }
+  @media print {
+    body { background: #fff; }
+    .sheet { width: auto; min-height: 0; margin: 0; padding: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <header class="hdr">
+      <div>
+        <h1 id="title"></h1>
+        <p id="intro"></p>
+      </div>
+      <span class="badge">STAPPENPLAN</span>
+    </header>
+    <div class="rule"></div>
+    <main id="poster"></main>
+    <footer class="motto"><span class="star">&#9733;</span><span id="motto"></span><span class="star">&#9733;</span></footer>
+  </div>
+
+  <script>/*
+ * exam-strategy - single content source (Dutch)
+ *
+ * One model, two renderers (2d.html, 3d.html). Edit here, run `node build.mjs`,
+ * and both printables update with the same story.
+ */
+window.CONTENT = {
+  lang: "nl",
+  title: "Toets- en examenstrategie",
+  intro: "Zes stappen die je elke toets en elk examen helpen omzetten in een goed resultaat.",
+  motto: "JE KUNT DIT! SUCCES!",
+  phases: [
+    {
+      id: "interesse",
+      num: 1,
+      name: "INTERESSE",
+      icon: "target",
+      color: "#12305e",
+      text: "Kies om te presteren. Haal rustig adem, zet je schouders los. Schakel naar je verstand en zet je aan-knop om!",
+      itemsStyle: "chips",
+      items: [
+        { name: "FOCUS", text: "Richt je aandacht op deze taak", color: "#12305e" },
+        { name: "CONCENTRATIE", text: "Blijf gefocust tot het einde!", color: "#2f9e5f" },
+        { name: "GOED LEZEN / LUISTEREN / KIJKEN", text: "Lees de vraag zo vaak als nodig!", color: "#e0a52a" }
+      ]
+    },
+    {
+      id: "begrijpen",
+      num: 2,
+      name: "BEGRIJPEN",
+      icon: "book",
+      color: "#3b7dd8",
+      text: "Wat is de opdracht precies? Wat wordt er gevraagd?",
+      itemsStyle: "lines",
+      items: []
+    },
+    {
+      id: "nadenken",
+      num: 3,
+      name: "(NA)DENKEN",
+      icon: "brain",
+      color: "#2f6fd0",
+      text: "Gebruik kladpapier - schrijf alles op!",
+      itemsStyle: "lines",
+      items: [
+        { name: "Visualiseren", text: "Teken wat beschreven wordt (bijv. figuur, situatie, grafiek)" },
+        { name: "Feiten noteren", text: "Schrijf feiten kort op (bijv. broer = 14, zus = broer - 2, mama = broer + zus + 24)" },
+        { name: "Vragen noteren", text: "Wat moet ik beantwoorden? (bijv. diameter? omtrek? oppervlakte?)" },
+        { name: "Vereisten noteren / verduidelijken", text: "Formaat? Eenheid? Kleur? Schrijf(stijl)? Afronding?" }
+      ]
+    },
+    {
+      id: "oplossen",
+      num: 4,
+      name: "OPLOSSEN",
+      icon: "stairs",
+      color: "#245bb0",
+      text: "Stap voor stap. Schrijf ALLE tussenstappen op! Ook als je het zeker weet!",
+      itemsStyle: "lines",
+      items: [
+        { name: "Loop je vast?", text: "Sla de vraag over en kom er straks op terug." },
+        { name: "Zit je echt vast?", text: "Vraag het." }
+      ]
+    },
+    {
+      id: "bevestigen",
+      num: 5,
+      name: "BEVESTIGEN",
+      icon: "stamp",
+      color: "#2f9e5f",
+      text: "Bevestig je antwoord!",
+      itemsStyle: "lines",
+      items: [
+        { name: "Klopt mijn antwoord?", text: "Bijv.: som hoeken = 180\u00b0? Of: vul je antwoord terug in de vergelijking?" }
+      ]
+    },
+    {
+      id: "controleren",
+      num: 6,
+      name: "CONTROLEREN",
+      icon: "magnifier",
+      color: "#c0392b",
+      text: "Loop alles na!",
+      itemsStyle: "lines",
+      items: [
+        { name: "Alle delen geantwoord?", text: "" },
+        { name: "In het formaat dat gevraagd werd?", text: "" },
+        { name: "Eenheid of notatie correct?", text: "(cm\u00b3, m, \u00b0, ...)" }
+      ]
+    }
+  ]
+};</script>
+  <script>
+    const ICONS = {
+      target:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
+      book:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg>',
+      brain:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8V15a3 3 0 0 0 4 2.8V20"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5.8V15a3 3 0 0 1-4 2.8V20"/><path d="M12 5v15"/></svg>',
+      stairs:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 19h4v-4h4v-4h4V7h6"/></svg>',
+      stamp:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 20h14"/><path d="M7 16.5h10V14a3 3 0 0 0-2-2.8V7a3 3 0 0 0-6 0v4.2A3 3 0 0 0 7 14z"/></svg>',
+      magnifier: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.3 15.3 21 21"/></svg>'
+    };
+
+    const C = window.CONTENT;
+    document.getElementById('title').textContent = C.title;
+    document.getElementById('intro').textContent = C.intro;
+    document.getElementById('motto').textContent = C.motto;
+
+    const poster = document.getElementById('poster');
+    for (const p of C.phases) {
+      const sec = document.createElement('section');
+      sec.className = 'phase';
+      sec.style.setProperty('--c', p.color);
+
+      const head = document.createElement('div');
+      head.className = 'phase-head';
+      head.innerHTML =
+        '<span class="num">' + p.num + '</span>' +
+        '<h2>' + p.name + '</h2>' +
+        (p.icon && ICONS[p.icon] ? '<span class="ico">' + ICONS[p.icon] + '</span>' : '');
+
+      const body = document.createElement('div');
+      body.className = 'phase-body';
+
+      const text = document.createElement('p');
+      text.className = 'phase-text';
+      text.textContent = p.text;
+      body.appendChild(text);
+
+      if (p.items && p.items.length) {
+        if (p.itemsStyle === 'chips') {
+          const chips = document.createElement('div');
+          chips.className = 'chips';
+          for (const it of p.items) {
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.style.setProperty('--cc', it.color || p.color);
+            chip.innerHTML = '<div class="chip-title">' + it.name + '</div>' +
+                             (it.text ? '<div class="chip-text">' + it.text + '</div>' : '');
+            chips.appendChild(chip);
+          }
+          body.appendChild(chips);
+        } else {
+          const list = document.createElement('div');
+          list.className = 'items';
+          for (const it of p.items) {
+            const row = document.createElement('div');
+            row.className = 'item';
+            row.innerHTML = '<span class="dot"></span><span>' +
+              (it.name ? '<b>' + it.name + '</b> ' : '') +
+              (it.text || '') + '</span>';
+            list.appendChild(row);
+          }
+          body.appendChild(list);
+        }
+      }
+
+      sec.appendChild(head);
+      sec.appendChild(body);
+      poster.appendChild(sec);
+    }
+  </script>
+</body>
+</html>

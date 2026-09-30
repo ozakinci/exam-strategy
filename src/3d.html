@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toets- en examenstrategie - 3D</title>
+<style>
+  :root {
+    --ink: #1c2430;
+    --muted: #5b6572;
+    --paper: #ffffff;
+    --conn: #b9c4d6;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: #e9edf3;
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sheet {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 18px auto;
+    padding: 10mm 13mm 9mm;
+    background: var(--paper);
+    background-image:
+      linear-gradient(rgba(18, 48, 94, .05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(18, 48, 94, .05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    box-shadow: 0 6px 30px rgba(15, 30, 60, .14);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .hdr { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .hdr h1 { margin: 0; font-size: 24px; letter-spacing: .01em; color: #12305e; }
+  .hdr p { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); max-width: 150mm; }
+  .badge {
+    flex: none; font-size: 10px; font-weight: 700; letter-spacing: .16em;
+    color: #fff; background: #12305e; border-radius: 999px; padding: 6px 13px;
+    box-shadow: 3px 3px 0 rgba(18, 48, 94, .3);
+    white-space: nowrap;
+  }
+  .rule { height: 4px; border-radius: 3px; margin: 9px 0 12px;
+          background: linear-gradient(90deg, #12305e, #3b7dd8 45%, #2f9e5f 72%, #c0392b);
+          box-shadow: 0 3px 0 rgba(18, 48, 94, .14); }
+
+  /* Stack of extruded slabs */
+  main { display: flex; flex-direction: column; gap: 12px; }
+  .phase {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(18, 48, 94, .14);
+    box-shadow: 7px 7px 0 var(--c-dark), 9px 9px 20px rgba(15, 30, 60, .16);
+    break-inside: avoid;
+    page-break-inside: avoid;
+    background: #fff;
+  }
+  .phase-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 12px;
+    background: var(--c);
+    background: linear-gradient(180deg, var(--c-top), var(--c));
+    color: #fff;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, .4), inset 0 -2px 0 rgba(0, 0, 0, .14);
+  }
+  .num {
+    flex: none; width: 25px; height: 25px; border-radius: 5px;
+    background: rgba(255, 255, 255, .22);
+    border: 1px solid rgba(255, 255, 255, .55);
+    box-shadow: inset 2px 2px 0 rgba(255, 255, 255, .28), inset -2px -2px 0 rgba(0, 0, 0, .16);
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 12px;
+  }
+  .phase-head h2 { margin: 0; font-size: 15px; letter-spacing: .09em; text-shadow: 0 1px 0 rgba(0, 0, 0, .22); }
+  .phase-head .ico { margin-left: auto; width: 24px; height: 24px; opacity: .95; }
+  .ico svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .25)); }
+  .phase-body { padding: 8px 12px 9px; }
+  .phase-text { margin: 0; font-size: 12.5px; }
+  .phase-text + .items, .phase-text + .chips { margin-top: 7px; }
+
+  .items { display: flex; flex-direction: column; gap: 4px; }
+  .item { display: flex; gap: 9px; font-size: 11.5px; line-height: 1.35; }
+  .item .dot { flex: none; width: 9px; height: 9px; margin-top: 4px; border-radius: 2px;
+               background: var(--c); box-shadow: 2px 2px 0 var(--c-dark); }
+  .item b { color: var(--c); font-weight: 700; }
+
+  .chips { display: flex; gap: 10px; }
+  .chip {
+    flex: 1 1 0; min-width: 0;
+    border: 1.5px solid var(--cc);
+    border-left-width: 5px;
+    border-radius: 8px;
+    padding: 6px 9px;
+    background: var(--cc-light);
+    box-shadow: 3px 3px 0 var(--cc-dark);
+  }
+  .chip-title { font-weight: 700; color: var(--cc-dark); font-size: 10.5px; letter-spacing: .03em; }
+  .chip-text { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* Step-down connector between phases */
+  .connector { height: 0; display: grid; place-items: center; }
+  .connector span {
+    width: 11px; height: 11px;
+    border-right: 2.5px solid var(--conn);
+    border-bottom: 2.5px solid var(--conn);
+    transform: rotate(45deg) translateY(-3px);
+  }
+
+  /* Footer */
+  .motto {
+    margin-top: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    color: #fff; font-weight: 800; font-size: 16px; letter-spacing: .06em;
+    background: #12305e;
+    background: linear-gradient(180deg, #1d4b8f, #12305e);
+    border-radius: 10px; padding: 9px 16px;
+    box-shadow: 6px 6px 0 rgba(18, 48, 94, .32);
+  }
+  .motto .star { color: #f2c14e; font-size: 18px; }
+
+  @media (max-width: 760px) {
+    .sheet { width: auto; min-height: 0; margin: 0; padding: 16px; }
+    .chips { flex-direction: column; }
+  }
+
+  @page { size: A4 portrait; margin: 9mm; }
+  @media print {
+    body { background: #fff; }
+    .sheet { width: auto; min-height: 0; margin: 0; padding: 0; box-shadow: none; background: #fff; }
+    .phase { box-shadow: 6px 6px 0 var(--c-dark); }
+    .motto { box-shadow: 5px 5px 0 rgba(18, 48, 94, .32); }
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <header class="hdr">
+      <div>
+        <h1 id="title"></h1>
+        <p id="intro"></p>
+      </div>
+      <span class="badge">STAPPENPLAN</span>
+    </header>
+    <div class="rule"></div>
+    <main id="poster"></main>
+    <footer class="motto"><span class="star">&#9733;</span><span id="motto"></span><span class="star">&#9733;</span></footer>
+  </div>
+
+  <script>/*__CONTENT__*/</script>
+  <script>
+    const ICONS = {
+      target:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
+      book:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg>',
+      brain:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8V15a3 3 0 0 0 4 2.8V20"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5.8V15a3 3 0 0 1-4 2.8V20"/><path d="M12 5v15"/></svg>',
+      stairs:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 19h4v-4h4v-4h4V7h6"/></svg>',
+      stamp:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 20h14"/><path d="M7 16.5h10V14a3 3 0 0 0-2-2.8V7a3 3 0 0 0-6 0v4.2A3 3 0 0 0 7 14z"/></svg>',
+      magnifier: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.3 15.3 21 21"/></svg>'
+    };
+
+    // precompute shades so the printable never depends on color-mix()
+    function toRgb(hex) {
+      const h = hex.replace('#', '');
+      const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+    function blend(hex, target, t) {
+      const a = toRgb(hex), b = toRgb(target);
+      return '#' + a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, '0')).join('');
+    }
+    const darken  = (hex, t) => blend(hex, '#000000', t);
+    const lighten = (hex, t) => blend(hex, '#ffffff', t);
+
+    const C = window.CONTENT;
+    document.getElementById('title').textContent = C.title;
+    document.getElementById('intro').textContent = C.intro;
+    document.getElementById('motto').textContent = C.motto;
+
+    const poster = document.getElementById('poster');
+    C.phases.forEach((p, i) => {
+      const sec = document.createElement('section');
+      sec.className = 'phase';
+      sec.style.setProperty('--c', p.color);
+      sec.style.setProperty('--c-dark', darken(p.color, 0.42));
+      sec.style.setProperty('--c-top', lighten(p.color, 0.16));
+
+      const head = document.createElement('div');
+      head.className = 'phase-head';
+      head.innerHTML =
+        '<span class="num">' + p.num + '</span>' +
+        '<h2>' + p.name + '</h2>' +
+        (p.icon && ICONS[p.icon] ? '<span class="ico">' + ICONS[p.icon] + '</span>' : '');
+
+      const body = document.createElement('div');
+      body.className = 'phase-body';
+
+      const text = document.createElement('p');
+      text.className = 'phase-text';
+      text.textContent = p.text;
+      body.appendChild(text);
+
+      if (p.items && p.items.length) {
+        if (p.itemsStyle === 'chips') {
+          const chips = document.createElement('div');
+          chips.className = 'chips';
+          for (const it of p.items) {
+            const cc = it.color || p.color;
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.style.setProperty('--cc', cc);
+            chip.style.setProperty('--cc-dark', darken(cc, 0.28));
+            chip.style.setProperty('--cc-light', lighten(cc, 0.9));
+            chip.innerHTML = '<div class="chip-title">' + it.name + '</div>' +
+                             (it.text ? '<div class="chip-text">' + it.text + '</div>' : '');
+            chips.appendChild(chip);
+          }
+          body.appendChild(chips);
+        } else {
+          const list = document.createElement('div');
+          list.className = 'items';
+          for (const it of p.items) {
+            const row = document.createElement('div');
+            row.className = 'item';
+            row.innerHTML = '<span class="dot"></span><span>' +
+              (it.name ? '<b>' + it.name + '</b> ' : '') +
+              (it.text || '') + '</span>';
+            list.appendChild(row);
+          }
+          body.appendChild(list);
+        }
+      }
+
+      sec.appendChild(head);
+      sec.appendChild(body);
+      poster.appendChild(sec);
+
+      // step-down arrow to the next stage
+      if (i < C.phases.length - 1) {
+        const conn = document.createElement('div');
+        conn.className = 'connector';
+        conn.innerHTML = '<span></span>';
+        poster.appendChild(conn);
+      }
+    });
+  </script>
+</body>
+</html>
