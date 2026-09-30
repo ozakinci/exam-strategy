@@ -22,23 +22,52 @@ dependencies. One content file feeds both printables, so the story stays identic
 - **Self-contained output**: each built HTML file opens directly from disk - no server, no CDN.
 - **Dutch** content and wording throughout.
 
-## Dependencies
+## Layout
 
-| What | Where it lives | How it's activated |
-|---|---|---|
-| Node.js | system install (`node`, `node --version`) | runs `build.mjs` only; the built HTML has zero runtime deps |
-| Browser | any modern browser (Edge/Chrome/Firefox) | open `index.html`, `2d.html` or `3d.html` |
+```
+exam-strategy/
+  src/                     sources (never opened directly)
+    content.js             the single Dutch content source
+    2d.html                template - content injected at build
+    3d.html                template - content injected at build
+    index.html             landing-page template
+  build.mjs                writes everything into output/
+  output/                  end results only - open files from here
+    2d.html
+    3d.html
+    index.html
+  .github/workflows/       publishes output/ to GitHub Pages
+  README.md
+  LICENSE
+```
 
-No npm packages. No external assets, fonts, or images.
+**Only open files from `output/`.** The files in `src/` are templates - they contain a
+`/*__CONTENT__*/` marker instead of the content and are not meant to be opened.
 
 ## Usage
 
 ```sh
-node build.mjs          # -> writes 2d.html and 3d.html from src/content.js
+node build.mjs          # -> writes output/2d.html, output/3d.html, output/index.html
 ```
 
-Open `index.html` for the landing page, or open `2d.html` / `3d.html` directly and print to A4
-(enable "background graphics" in the print dialog so the colours and depth effects appear).
+Open `output/index.html` for the landing page, or open `output/2d.html` / `output/3d.html`
+directly and print to A4 (enable "background graphics" in the print dialog so the colours and
+depth effects appear).
+
+## Deploy
+
+Pushing to `main` triggers `.github/workflows/pages.yml`, which publishes the `output/` folder
+to GitHub Pages at `https://ozakinci.github.io/exam-strategy/`.
+
+## Dependencies
+
+| What | Where it lives | How it's activated |
+|---|---|---|
+| Node.js | system install (`node`) | runs `build.mjs` only; the built HTML has zero runtime deps |
+| Browser | any modern browser (Edge/Chrome/Firefox) | open a file in `output/` |
+| GitHub Pages | this repo's Actions workflow | runs on push to `main` |
+
+No npm packages. No external assets, fonts, or images.
 
 ## Keeping this current
 
@@ -47,6 +76,6 @@ Update this file whenever a feature or dependency changes.
 ## Industry-standard note
 
 Follows the same conventions as the rest of the workspace: a project `README.md`, one content
-source built into standalone outputs, and a print-first design. It stays intentionally lean -
-no framework, no bundler, no dependency - because the artifact is a single printable page that
-must open anywhere and print identically.
+source built into a single results folder, and a print-first design. It stays intentionally
+lean - no framework, no bundler, no dependency - because the artifact is a single printable
+page that must open anywhere and print identically.
