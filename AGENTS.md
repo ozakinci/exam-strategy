@@ -31,8 +31,8 @@ Then open `output/index.html` for the landing page, or `output/2d.html` / `outpu
 - No dependencies, external assets, web fonts, images or CDN links. Each built file must open from disk with no server.
 - Colour must never carry meaning alone: the poster still reads when colours are off.
 
-## Session startup
+## Session triggers (clock in / clock out)
 
 1. **Project memory** - this file is auto-loaded; use it directly.
 2. **README freshness** - check that `README.md` matches the current features, layout and commands; update it when they drift.
-3. **Clock in / clock out** - this project defines no extra start or end steps; the global blocks apply as-is.
+3. **Global blocks** - no project-specific start or end steps; the global blocks apply as-is.
